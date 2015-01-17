@@ -2,3 +2,6 @@
     width: 500px;
     height: 100%;
 }
+.failure { 
+	background-color: red !important;
+}
