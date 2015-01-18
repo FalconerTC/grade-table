@@ -2,6 +2,19 @@
     width: 500px;
     height: 100%;
 }
-.failure { 
-	background-color: red !important;
+.summary {
+	width: 515px;
+	height: 80px;
+}
+.excellent-grade {
+	color: blue !important;
+}
+.good-grade {
+	color: green !important;
+}
+.passing-grade {
+	color: #FFA500 !important;
+}
+.fail-grade { 
+	color: red !important;
 }
