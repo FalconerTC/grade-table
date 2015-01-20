@@ -1,21 +1,23 @@
 (function() {
   var app = angular.module('grade-table', ['ui.grid', 'ui.grid.edit', 'ui.grid.cellNav', 'ngStorage']);
 
-  var defaultUsers = [
+  var sampleUsers = [ { name: "(new)", grade: ''} ];
+
+/*  sampleUsers.push(
 	  { name: "Moroni", grade: 100 },
 	  { name: "Tiancum", grade: 85 },
 	  { name: "Jacob", grade: 40 },
 	  { name: "Nephi", grade: 68 },
-	  { name: "Enos", grade: 0 },
-	  { name: "(new)", grade: '' }
-	];
+	  { name: "Enos", grade: 0 }
+	);*/
 
   app.controller('TableController', function($rootScope, $localStorage) {
 
+  	//$localStorage.$reset();
 
-  	$localStorage.$reset();
+  	//Set local storage default
   	$rootScope.storage = $localStorage.$default({
-  		users: defaultUsers
+  		users: sampleUsers
   	});
 
   	$rootScope.gridOptions = { enableCellEditOnFocus : true};
@@ -59,14 +61,14 @@
 	     	if (oldValue === "(new)" && newValue !== "(new)") {
 	     		$rootScope.gridOptions.data.push({ name: "(new)", grade: '' });
 	     	}
-	     	console.log("Sending event");
+	     	//Send data to the summary controller
 	     	$rootScope.$broadcast('event', $rootScope.gridOptions.data);
-	      //console.log('edited row id:' + rowEntity.$$hashKey+ ' Column:' + colDef.name + ' newValue:' + newValue + ' oldValue:' + oldValue);
 	     });
 	   };
 
   	$rootScope.gridOptions.data = $rootScope.storage.users;
 
+  	//Send initial data to the summary controller
   	setTimeout(function(){
   	    $rootScope.$apply(function(){
   	        $rootScope.$broadcast('event', $rootScope.gridOptions.data);
@@ -85,8 +87,9 @@
 			{ field: 'average', displayName: 'Average Grade', type: 'number' }
 		];
 
-		$scope.gridOptions.data = [{ min: 0, max: 0, average: 0 }];
+		$scope.gridOptions.data = [ { min: 0, max: 0, average: 0 } ];
 
+		// Calculate new summary values
 		function updateData(data) {
 			var i, len;
 			var min, max, avg;
@@ -108,12 +111,10 @@
 				}
 			}
 			$scope.gridOptions.data = [{ min: min, max: max, average: avg }];
-			
 		}
 
+		//Receive new summary data
 		$scope.$on('event', function(event, data) {
-			console.log("Received stuff");
-			console.log(data);
 			updateData(data);
 		});
 
